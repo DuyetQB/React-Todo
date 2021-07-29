@@ -1,11 +1,14 @@
 import React, {useState} from 'react';
 import Item from './Todo-item';
+import Textarea from '../common/Textarea';
 import './css/index.css';
 export default function Todo() {
   const [task, setTask] = useState([]);
   const [text, setText] = useState('');
 
   const [textEdit, setTextEdit] = useState('');
+  const [description,setDescription] = useState([]);
+  const [textDescription,setTextDescription] = useState('');
   async function add() {
     if (text.length <= 0) {
       return;
@@ -20,6 +23,19 @@ export default function Todo() {
     setText(newItem);
   }
 
+  function handleValueDescription(event) {
+    let newItem = event.target.value;
+
+    setDescription(newItem);
+  }
+
+  function handleValueDesc(event) {
+    let newItem = event;
+
+    setTextDescription(newItem);
+    
+  }
+
   function deleteTask(id) {
     let taskChange = task.filter((item, index) => index !== id);
     setTask(taskChange);
@@ -29,16 +45,20 @@ export default function Todo() {
     let value = item;
 
     setTextEdit(value);
+    
   }
 
   function handleSaveTask(textId, index) {
     let saveText = task.map(function (item, id) {
       return item.replace(textId, textEdit);
     });
-
+if(textEdit === '' || null || undefined){
+    return textId;
+}
     setTextEdit(saveText);
     setText(textEdit);
     setTask(saveText);
+    setDescription(description.concat(textDescription));
   }
 
  
@@ -56,6 +76,7 @@ export default function Todo() {
             value={text}
           />
         </div>
+       <Textarea onChange= {handleValueDescription} value={description}/>
        
         <div className="wrap-btn">
           <button className="btn-add" onClick={add}>
@@ -74,6 +95,8 @@ export default function Todo() {
                 handleDelete={deleteTask.bind(this, index)}
                 handleChangeValue={handleValueTask}
                 handleSave={handleSaveTask.bind(this, item, index)}
+                valueDescription = {description}
+                handleValueDescription ={handleValueDesc}
               />
             </div>
           );
